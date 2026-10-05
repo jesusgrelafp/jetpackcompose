@@ -27,7 +27,7 @@ fun DefaultPreview() {
 
 ## Opciones de personalización de @Preview
 
-Si analizas la clase @Preview, verás que tiene muchas funciones útiles. Haz clic (Command + clic en Mac) sobre la anotación @Preview para ver las siguientes opciones:
+Si analizas la clase @Preview, verás que tiene muchas funciones útiles. Haz CTRL + clic sobre la anotación @Preview para ver las siguientes opciones:
 
 ```kotlin
 annotation class Preview(
