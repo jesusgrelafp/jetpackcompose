@@ -53,19 +53,7 @@ Hay dos formas de personalizar la vista previa:
 1. Definir la personalización escribiéndola manualmente.
 2. Usar la herramienta de edición de la vista previa.
 
-## Pasos para activar la herramienta de edición de la vista previa
-
-La herramienta de edición de la vista previa no está disponible por defecto. Para activarla, sigue estos pasos:
-
-1. Haz clic en **Android Studio** en el menú superior.
-2. Ve a **Settings** (en Mac: haz clic en **Preferences**).
-3. Haz clic en **Experimental**.
-4. Marca la casilla **Enable @Preview picker**.
-5. Haz clic en **Apply** y después en **OK**.
-
-![Activación de Preview picker en los ajustes](images/0d004d_fea3314614194883a3bd70e474cf9d79_mv2.jpg)
-
-Tras activarlo, verás el icono de ajustes en @Preview.
+Verás el icono de ajustes en @Preview.
 
 ![Icono de ajustes de Preview en el código](images/0d004d_ba74d2a304e840b6a9ded639113310b4_mv2.png)
 
