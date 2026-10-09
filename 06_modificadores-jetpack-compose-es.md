@@ -2,49 +2,70 @@
 
 > Domina los modificadores de Jetpack Compose: fondo, padding, tamaño, alpha, rotación, escala, weight, borde, recorte y más.
 
-*Básicos · 1 de febrero de 2024 · 12 min de lectura*  
-*Fuente (en inglés): <https://www.jetpackcompose.net/jetpack-compose-modifiers>*
+*Básicos · Actualizado · 12 min de lectura*  
+Fuente base (en inglés): <https://jetpackcompose.net>
+
+---
 
 ## ¿Qué son los modificadores (Modifiers) en Jetpack Compose?
 
-Los elementos Modifier decoran o añaden comportamiento a los elementos de la interfaz de Compose. Por ejemplo, los fondos, el padding y los listeners de eventos de clic decoran o añaden comportamiento a filas, textos o botones.
+Los elementos `Modifier` decoran o añaden comportamiento a los componentes visuales de la interfaz de Compose. Por ejemplo, los fondos, el espaciado y los gestos de interacción decoran o añaden lógica a filas, columnas, textos o botones.
 
-1. Con ayuda de los modificadores podemos dar tamaño y espaciado.
-2. Colocar los widgets dentro de un layout.
-3. Embellecer los widgets.
+1.  Permiten definir dimensiones y espaciados.
+2.  Ayudan a posicionar los componentes dentro de un layout o contenedor.
+3.  Modifican el aspecto visual y la estética de la interfaz.
 
-> *Si eres desarrollador de Android:* la mayoría de los atributos XML (id, padding, margin, color, alpha, ratio, elevation...) se aplican mediante modificadores.
+> **Nota para desarrolladores de Android clásico:** La gran mayoría de los atributos definidos en los archivos XML tradicionales (`id`, `padding`, `margin`, `background`, `alpha`, `elevation`, etc.) se aplican ahora mediante modificadores.
 
-## 1. Color de fondo
+---
+
+### Cómo se estructura un Modifier (Sintaxis de encadenamiento)
+
+En Jetpack Compose, un modificador no es una función convencional con parámetros únicos, sino un objeto que se construye encadenando métodos de forma consecutiva mediante puntos. La estructura que se utiliza en el código sigue este patrón:
 
 ```kotlin
-Text("Text with green background color",
-            Modifier.background(color = Color.Green))
+Modifier
+    .background(Color.Blue) // 1. Primero se aplica el fondo
+    .padding(16.dp)        // 2. Después se aplica el espacio interno
+    .fillMaxWidth()        // 3. Finalmente se expande al ancho máximo
 ```
 
-## 2. Padding
+> **Regla fundamental:** El orden en el que se encadenan los modificadores altera por completo el resultado visual en la pantalla, ya que cada método modifica el área delimitada por el paso anterior.
 
-Jetpack Compose no tiene un modificador para el margin. Debemos usar el modificador `padding` tanto para el padding (relleno) como para el margin (margen).
+---
+
+## Opciones de Personalización y Diseño
+
+### 1. Color de fondo
+Aplica un color plano al fondo del componente utilizando el método `.background()`.
+
+```kotlin
+Text(
+    text = "Text with green background color",
+    modifier = Modifier.background(color = Color.Green)
+)
+```
+
+### 2. Padding (Márgenes y Rellenos)
+Jetpack Compose no dispone de un modificador específico llamado `margin`. Se utiliza el modificador `.padding()` de forma consecutiva tanto para el relleno interno como para el margen externo, dependiendo de su posición respecto al fondo.
 
 ```kotlin
 @Composable
 fun TextWidthPadding() {
     Text(
-        "Padding and margin!",
-        Modifier.padding(32.dp) // Outer padding (margin)
-            .background(color = Color.Green) //background color
-            .padding(16.dp) // Inner padding
+        text = "Padding and margin!",
+        modifier = Modifier
+            .padding(32.dp)                 // Funciona como Margen Externo (antes del fondo)
+            .background(color = Color.Green) // Color de fondo aplicado al área actual
+            .padding(16.dp)                 // Funciona como Relleno Interno (después del fondo)
     )
 }
 ```
 
 ![Ejemplo de padding](images/0d004d_5e2f2a1302754c0192c1bad64b6923a3_mv2.png)
 
-## 3. Ancho y alto
-
-Para el ancho debes usar ***width(value : Dp)***.
-
-Para el alto debes usar ***height(value: Dp)***.
+### 3. Ancho y alto
+Para definir dimensiones fijas e independientes en los ejes horizontal y vertical, se utilizan los métodos `.width()` and `.height()`.
 
 ```kotlin
 @Composable
@@ -62,13 +83,10 @@ fun WidthAndHeightModifier() {
 
 ![Ejemplo de ancho y alto](images/0d004d_31650fe45b004b62a8a920f2976ba192_mv2.png)
 
-## 4. Size (tamaño)
-
-Si necesitas el ancho y el alto en el mismo modificador, usa **Modifier.size()**.
-
-Si el ancho y el alto son iguales, usa `Modifier.size(size: Dp)`. Ejemplo: ***Modifier.size(200.dp)***
-
-Si quieres un ancho y un alto distintos, usa `Modifier.size(width: Dp, height: Dp)`. Ejemplo: ***Modifier.size(width=200.dp,height=100.dp)***
+### 4. Size (Tamaño combinado)
+Cuando se requiere asignar ancho y alto de forma simultánea en la misma instrucción, se utiliza `.size()`.
+*   Si el ancho y el alto deben ser iguales, se pasa un único valor: `.size(200.dp)`.
+*   Si se requieren dimensiones distintas, se especifican ambos parámetros: `.size(width = 200.dp, height = 100.dp)`.
 
 ```kotlin
 @Composable
@@ -83,15 +101,8 @@ fun SizeModifier() {
 }
 ```
 
-## 5. Fill Max Width (ancho máximo)
-
-Debes pasar el tamaño como una fracción, que debe estar entre 0.0 y 1.0.
-
-Si quieres que el ancho sea ***match_parent***, puedes usar 1.0.
-
-Su valor por defecto es 1.0. Si llamas al método sin indicar una fracción, se establecerá en 1.0.
-
-> 0.0 significa 0 %, 0.1 significa 10 %, 1.0 significa 100 %
+### 5. Fill Max Width (Ancho máximo adaptable)
+Expande el componente horizontalmente ocupando el espacio disponible en base a una fracción comprendida entre `0.0` (0%) y `1.0` (100%). Equivale al comportamiento tradicional de `match_parent`. Si no se especifica una fracción, toma el valor `1.0` por defecto.
 
 ```kotlin
 @Composable
@@ -101,16 +112,14 @@ fun FillWidthModifier() {
         color = Color.White,
         modifier = Modifier
             .background(Color.Gray)
-            .padding(Dp(10f))
-            .fillMaxWidth(1f))
+            .padding(10.dp)
+            .fillMaxWidth(1f) // Ocupa el 100% del ancho del contenedor padre
+    )
 }
 ```
 
-## 6. Fill Max Height (alto máximo)
-
-Debes pasar el tamaño como una fracción, que debe estar entre 0.0 y 1.0.
-
-Si quieres que el alto sea ***match_parent***, puedes usar **fillMaxHeight(1.0)**.
+### 6. Fill Max Height (Alto máximo adaptable)
+Expande el componente verticalmente ocupando el espacio disponible basándose en una fracción comprendida entre `0.0` y `1.0`.
 
 ```kotlin
 @Composable
@@ -120,112 +129,95 @@ fun FillHeightModifier() {
         color = Color.White,
         modifier = Modifier
             .background(Color.Green)
-            .fillMaxHeight(0.75f) //75% area fill
+            .fillMaxHeight(0.75f) // Ocupa el 75% del alto disponible
     )
 }
 ```
 
-## 7. Alpha (opacidad)
+---
 
-Alpha se utiliza para establecer la opacidad de la vista.
+## Transformaciones Gráficas
 
-```kotlin
-Modifier.alpha(alpha: Float)
-```
-
-Puedes usar valores de 0.0 a 1.0.
-
-> 0.0 significa 0 %, 0.1 significa 10 %, 1.0 significa 100 %
+### 7. Alpha (Opacidad)
+Controla la transparencia del componente visual mediante un valor flotante de `0.0` (completamente invisible) a `1.0` (completamente opaco).
 
 ```kotlin
 @Composable
 fun AlphaModifier() {
     Box(
-        Modifier
+        modifier = Modifier
             .size(250.dp)
-            .alpha(0.5f)//50% opacity
+            .alpha(0.5f) // 50% de opacidad visual
             .background(Color.Red)
     )
 }
 ```
 
-## 8. Rotate (rotación)
-
-Establece los grados que gira la vista alrededor del centro del composable. Los **valores crecientes** producen una rotación **en sentido horario**. Los **grados negativos** se usan para rotar **en sentido antihorario**.
-
-```kotlin
-Modifier.rotate(degrees: Float)
-```
+### 8. Rotate (Rotación)
+Gira la interfaz los grados indicados tomando como eje el centro del componente. Los valores positivos realizan un giro en sentido horario, mientras que los valores negativos lo hacen en sentido antihorario.
 
 ```kotlin
 @Composable
 fun RotateModifier() {
     Box(
-        Modifier
-            .rotate(45f)
+        modifier = Modifier
+            .rotate(45f) // Gira 45 grados en sentido horario
             .size(250.dp)
             .background(Color.Red)
     )
 }
 ```
 
-## 9. Scale (escala)
-
-Escala el contenido del composable según los siguientes factores de escala a lo largo del eje horizontal y del eje vertical, respectivamente. Se pueden usar factores de escala negativos para reflejar el contenido respecto al eje horizontal o vertical correspondiente.
+### 9. Scale (Escala)
+Aumenta o reduce el tamaño visual del contenido multiplicándolo por los factores especificados en los ejes `scaleX` y `scaleY`. Los valores negativos provocan un efecto de espejo horizontal o vertical.
 
 ```kotlin
 @Composable
 fun ScaleModifier() {
     Box(
-        Modifier
-            .scale(scaleX = 2f, scaleY = 3f)
+        modifier = Modifier
+            .scale(scaleX = 2f, scaleY = 3f) // Multiplica por 2 el ancho y por 3 el alto original
             .size(200.dp, 200.dp)
     )
 }
 ```
 
-## 10. Weight (peso)
+---
 
-Con `weight` puedes especificar una proporción de tamaño entre varias vistas.
+## Estructura y Estilo Avanzado
 
-Por ejemplo: si añades ***view1*** con weight **1**, ***view2*** con weight **1** y ***view3*** con weight **2**.
-
-Se sumarán todos los pesos, **1** + **1** + **2** = **4**, y se asignará el espacio a cada vista en función del peso indicado.
-
-- View1 obtiene el 25 % del espacio → 1/4*100 = 25 %
-- View2 obtiene el 25 % del espacio → 1/4*100 = 25 %
-- View3 obtiene el 50 % del espacio → 2/4*100 = 50 %
+### 10. Weight (Distribución proporcional de peso)
+Permite repartir de manera proporcional el espacio disponible entre varios componentes distribuidos linealmente. 
+> **Nota técnica importante:** Este modificador solo está disponible cuando el componente se encuentra directamente dentro del ámbito (*scope*) de un contenedor lineal (`Row` o `Column`).
 
 ```kotlin
 @Composable
 fun WeightModifier(){
-    Row() {
+    Row {
         Column(
-            Modifier.weight(1f).background(Color.Red)){
-            Text(text = "Weight = 1", color = Color.White)
+            modifier = Modifier.weight(1f).background(Color.Red)
+        ){
+            Text(text = "Sección 1 (25%)", color = Color.White)
         }
         Column(
-            Modifier.weight(1f).background(Color.Blue)){
-            Text(text = "Weight = 1", color = Color.White)
+            modifier = Modifier.weight(1f).background(Color.Blue)
+        ){
+            Text(text = "Sección 2 (25%)", color = Color.White)
         }
         Column(
-            Modifier.weight(2f).background(Color.Green)
+            modifier = Modifier.weight(2f).background(Color.Green)
         ) {
-            Text(text = "Weight = 2")
+            Text(text = "Sección 3 (50%)")
         }
     }
 }
 ```
 
-> **Nota**: `weight` está disponible desde la versión 1.0.0 de Compose.
-
-## 11. Border (borde)
-
-**Puedes establecer el borde de las siguientes formas:**
-
-1. `Modifier.border(width: Dp, color: Color, shape: Shape = RectangleShape)`
-2. `Modifier.border(width: Dp, brush: Brush, shape: Shape)`
-3. `Modifier.border(border: BorderStroke, shape: Shape = RectangleShape)`
+### 11. Border (Contornos y Bordes)
+Permite trazar líneas periféricas alrededor del límite del componente indicando su grosor, color, pincel o geometría. Dispone de tres firmas comunes:
+1.  `Modifier.border(width: Dp, color: Color, shape: Shape = RectangleShape)`
+2.  `Modifier.border(width: Dp, brush: Brush, shape: Shape)`
+3.  `Modifier.border(border: BorderStroke, shape: Shape = RectangleShape)`
 
 ```kotlin
 @Composable
@@ -235,14 +227,13 @@ fun BorderModifier() {
         modifier = Modifier
             .padding(10.dp)
             .background(Color.Yellow)
-            .border(2.dp,Color.Red)
+            .border(2.dp, Color.Red)
             .padding(10.dp)
     )
 }
 ```
 
-**Borde con esquinas redondeadas:**
-
+#### Contorno con esquinas redondeadas
 ```kotlin
 @Composable
 fun BorderWithShape() {
@@ -258,16 +249,12 @@ fun BorderWithShape() {
 
 ![Borde con esquinas redondeadas](images/0d004d_98cbb7ca9e094bdbab6506295e6b94b8_mv2.png)
 
-## 12. Clip (recorte)
-
-El modificador `clip` permite recortar la forma existente. Puedes usar una forma predeterminada o tus propias formas personalizadas.
-
-**Formas disponibles en Jetpack Compose:**
-
-- `RectangleShape`
-- `CircleShape`
-- `RoundedCornerShape`
-- `CutCornerShape`
+### 12. Clip (Recorte geométrico)
+El modificador `.clip()` restringe el área visual del componente y sus componentes hijos según una forma determinada. Las formas geométricas estándar integradas en Compose son:
+*   `RectangleShape` (Rectángulo básico)
+*   `CircleShape` (Círculo perfecto)
+*   `RoundedCornerShape` (Esquinas redondeadas)
+*   `CutCornerShape` (Esquinas achaflanadas o cortadas en línea recta)
 
 ```kotlin
 @Composable
@@ -276,14 +263,16 @@ fun ClipModifier() {
         text = "Text with Clipped background",
         color = Color.White,
         modifier = Modifier
-            .padding(Dp(10f))
-            .clip(RoundedCornerShape(25.dp))
+            .padding(10.dp)
+            .clip(RoundedCornerShape(25.dp)) // Recorta las esquinas del fondo
             .background(Color.Blue)
-            .padding(Dp(15f))
+            .padding(15.dp)
     )
 }
 ```
 
-**Código fuente:**
+---
 
-<https://github.com/JetpackCompose/Jetpack-Compose-Samples>
+**Código fuente y recursos adicionales**
+
+<https://github.com>
