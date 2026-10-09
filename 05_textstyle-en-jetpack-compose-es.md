@@ -181,7 +181,3 @@ fun TextHeadingStyle() {
 ![Resultado de la tipografía](images/0d004d_e91847b29a2542669c74499514ba9f84_mv2.png)
 
 ---
-
-**Código fuente y recursos adicionales**
-
-<https://github.com>
