@@ -57,7 +57,7 @@ fun SimpleColumn(){
 
 ## Alineación (Alignment) vs Disposición (Arrangement)
 
-Para dominar los layouts en Compose, los alumnos deben entender la diferencia entre dos conceptos clave:
+Para dominar los layouts en Compose, debemos entender la diferencia entre dos conceptos clave:
 *   **Eje Principal (Main Axis):** El eje en el que el contenedor añade los elementos (Horizontal en `Row`, Vertical en `Column`). Se controla con **Arrangement**.
 *   **Eje Cruzado (Cross Axis):** El eje perpendicular al principal (Vertical en `Row`, Horizontal en `Column`). Se controla con **Alignment**.
 
@@ -91,7 +91,7 @@ Cuando trabajamos en contenedores libres de dos ejes (como `Box`), combinamos am
 *   `Alignment.BottomCenter` (Inferior Centro)
 *   `Alignment.BottomEnd` (Inferior Derecha)
 
-> **💡 Nota para el alumno:** También puedes usar estas alineaciones de forma individual en un único hijo usando el modificador `Modifier.align()`.
+> ** Nota:** También puedes usar estas alineaciones de forma individual en un único hijo usando el modificador `Modifier.align()`.
 
 ---
 
