@@ -2,7 +2,7 @@
 
 > Aprende a usar y personalizar el composable Text en Jetpack Compose: tamaño, color, negrita, cursiva, número máximo de líneas y más.
 
-*Básicos · Actualizado · 12 min de lectura*  
+*Básicos · 12 min de lectura*  
 *Fuente base (en inglés): <https://jetpackcompose.net>*
 
 ---
@@ -13,55 +13,61 @@ Si eres desarrollador de Android clásico, equivale al componente ***TextView***
 
 Si eres nuevo en la programación Android, representa simplemente una ***etiqueta*** (*label*) o un ***párrafo*** de texto dentro de la interfaz.
 
-### Parámetros oficiales de la función Text
-A continuación se muestran los parámetros más comunes incluidos en la firma del constructor de `Text`, detallando la función de cada propiedad:
+> **Nota sobre los imports:** en los ejemplos de este documento se asume que has importado lo necesario (`androidx.compose.material3.Text`, `androidx.compose.ui.unit.sp`, `androidx.compose.ui.text.font.FontWeight`, etc.). Android Studio los sugiere automáticamente con `Alt + Enter`.
+
+### Parámetros de la función Text
+
+A continuación se muestran los parámetros más comunes de la firma de `Text` (versión de Material 3), con la función de cada uno. La firma completa incluye además `minLines` y `onTextLayout`.
 
 ```kotlin
 Text(
     text = "Texto a mostrar",                   // El contenido de texto que se va a renderizar en pantalla.
     modifier = Modifier,                        // Modificador para aplicar tamaño, márgenes, fondos o comportamientos.
-    color = Color.Unspecified,                  // El color que se aplicará al texto (si no se especifica, usa el del estilo).
-    fontSize = TextUnit.Unspecified,            // El tamaño de la fuente tipográfica utilizando unidades .sp.
-    fontStyle = null,                           // Define si el texto se muestra normal o inclinado (cursiva/itálica).
-    fontWeight = null,                          // Configura el grosor del trazo de la tipografía (como la negrita).
-    fontFamily = null,                          // La familia tipográfica que se va a usar (Monospace, SansSerif, etc.).
-    letterSpacing = TextUnit.Unspecified,       // El espacio horizontal adicional que se añade entre cada carácter.
-    textDecoration = null,                      // Aplica decoraciones visuales como el subrayado o el tachado.
-    textAlign = null,                           // La alineación horizontal del texto dentro de los límites de su contenedor.
-    lineHeight = TextUnit.Unspecified,          // El interlineado o la altura que tendrá cada línea de texto verticalmente.
-    overflow = TextOverflow.Clip,               // El comportamiento visual cuando el texto excede los límites disponibles.
-    softWrap = true,                            // Determina si el texto debe saltar automáticamente de línea al llegar al borde.
-    maxLines = Int.MAX_VALUE,                   // El límite máximo de líneas que se permite dibujar antes de truncar el texto.
-    style = LocalTextStyle.current              // Estilo de tipografía global predefinido de Material Design o TextStyle base.
+    color = Color.Unspecified,                  // Color del texto (si no se especifica, usa el del estilo).
+    fontSize = TextUnit.Unspecified,            // Tamaño de la fuente, usando unidades .sp.
+    fontStyle = null,                           // Define si el texto se muestra normal o inclinado (cursiva).
+    fontWeight = null,                          // Grosor del trazo de la tipografía (como la negrita).
+    fontFamily = null,                          // Familia tipográfica a usar (Monospace, SansSerif, etc.).
+    letterSpacing = TextUnit.Unspecified,       // Espacio horizontal adicional entre cada carácter.
+    textDecoration = null,                      // Decoraciones visuales como el subrayado o el tachado.
+    textAlign = null,                           // Alineación horizontal del texto dentro de su contenedor.
+    lineHeight = TextUnit.Unspecified,          // Altura de cada línea de texto (interlineado).
+    overflow = TextOverflow.Clip,               // Comportamiento visual cuando el texto excede el espacio disponible.
+    softWrap = true,                            // Si el texto salta de línea al llegar al borde del contenedor.
+    maxLines = Int.MAX_VALUE,                   // Máximo de líneas que se dibujan antes de truncar el texto.
+    style = LocalTextStyle.current              // Estilo tipográfico base (Material Theme o TextStyle propio).
 )
 ```
 
 ---
 
-## Opciones de Personalización Básica
+## Opciones de personalización básica
 
 ### 1. Tamaño del texto
-Modifica el tamaño del texto mediante el parámetro `fontSize`. Es necesario utilizar unidades de medida adaptables `sp` (Scale-independent Pixels).
+
+Modifica el tamaño del texto con el parámetro `fontSize`. Se debe usar la unidad `sp` (Scale-independent Pixels); de hecho, `fontSize` acepta valores `TextUnit` (`sp` o `em`), no `dp`.
 
 ```kotlin
 @Composable
-fun TextWithSize(label : String, size : TextUnit) {
+fun TextWithSize(label: String, size: TextUnit) {
     Text(label, fontSize = size)
 }
 
 // Ejemplo de llamada: TextWithSize("Big text", 40.sp)
 ```
 
-### Unidades de medida: .dp vs .sp
-Para diseñar interfaces accesibles y consistentes en Android, es necesario diferenciar con precisión cuándo utilizar cada unidad de medida:
+#### Unidades de medida: dp vs sp
 
-*   **`.dp` (Density-independent Pixels):** Es una unidad física abstracta que se adapta a la densidad de píxeles de cada pantalla para asegurar que un elemento mida lo mismo visualmente en cualquier dispositivo. Se utiliza exclusivamente para definir dimensiones estructurales, tales como el tamaño de los contenedores (`Modifier.size()`), márgenes internos o externos (`Modifier.padding()`), anchos (`width`) y altos (`height`).
-*   **`.sp` (Scale-independent Pixels):** Es una unidad de medida idéntica al `.dp`, pero que incluye un factor de escala adicional determinado por las preferencias del sistema operativo. Se utiliza de forma obligatoria para definir el tamaño de las fuentes tipográficas (`fontSize`) y el interlineado (`lineHeight`).
+Para diseñar interfaces accesibles y consistentes en Android, conviene distinguir cuándo usar cada unidad:
 
-**Regla de diseño:** Si un usuario aumenta el tamaño del texto en los ajustes de accesibilidad del sistema operativo para facilitar la lectura, las fuentes configuradas en `.sp` incrementarán su tamaño de forma dinámica. Si se configuran erróneamente en `.dp`, el tamaño del texto permanecerá fijo y bloqueado, lo que afecta de forma negativa y directa a la accesibilidad de la aplicación.
+*   **`dp` (Density-independent Pixels):** es una unidad lógica que se adapta a la densidad de píxeles de cada pantalla, de modo que un elemento mida lo mismo visualmente en cualquier dispositivo (1 dp equivale a 1 píxel en una pantalla de 160 dpi). Se usa para dimensiones estructurales: tamaño de contenedores (`Modifier.size()`), márgenes (`Modifier.padding()`), anchos (`width`), altos (`height`), radios de esquina (`RoundedCornerShape(8.dp)`), grosor de bordes, etc.
+*   **`sp` (Scale-independent Pixels):** es idéntica al `dp`, pero además se multiplica por el factor de escala de fuente que el usuario elige en los ajustes del sistema. Se debe usar para el tamaño de las fuentes (`fontSize`) y el interlineado (`lineHeight`), de modo que ambos escalen juntos.
+
+**Regla de diseño:** si un usuario aumenta el tamaño del texto en los ajustes de accesibilidad del sistema operativo, las fuentes configuradas en `sp` aumentarán su tamaño de forma dinámica. Si se configurasen en `dp` (por ejemplo, convirtiendo con `.value.sp` o mediante `LocalDensity`), el tamaño del texto permanecería fijo, lo que afectaría negativamente a la accesibilidad de la aplicación.
 
 ### 2. Color del texto
-Modifica el color del texto mediante el parámetro `color`.
+
+Modifica el color del texto con el parámetro `color`.
 
 ```kotlin
 @Composable
@@ -71,6 +77,7 @@ fun ColorText() {
 ```
 
 ### 3. Texto en negrita
+
 Usa el parámetro `fontWeight` para definir el grosor del texto.
 
 ```kotlin
@@ -81,7 +88,8 @@ fun BoldText() {
 ```
 
 ### 4. Texto en cursiva
-Usa el parámetro `fontStyle` para inclinar el texto en estilo itálico o cursiva.
+
+Usa el parámetro `fontStyle` para inclinar el texto (estilo itálico o cursiva).
 
 ```kotlin
 @Composable
@@ -92,10 +100,11 @@ fun ItalicText() {
 
 ---
 
-## Control de Extensión y Estructura
+## Control de extensión y estructura
 
 ### 5. Número máximo de líneas
-Para limitar la cantidad de líneas visibles en un composable `Text` cuando el contenido es demasiado largo, se establece el parámetro `maxLines`.
+
+Para limitar la cantidad de líneas visibles en un `Text` cuando el contenido es demasiado largo, se establece el parámetro `maxLines`.
 
 ```kotlin
 @Composable
@@ -105,7 +114,8 @@ fun MaxLines() {
 ```
 
 ### 6. Desbordamiento del texto
-Al limitar la longitud de un texto, se suele indicar visualmente que el contenido ha sido recortado. Para ello, se configura el parámetro `overflow`, el cual aplica un formato de truncado (como puntos suspensivos) únicamente si el texto supera el espacio asignado.
+
+Al limitar la longitud de un texto, conviene indicar visualmente que el contenido se ha recortado. Para ello se configura el parámetro `overflow`, que aplica un formato de truncado (como los puntos suspensivos con `TextOverflow.Ellipsis`) únicamente si el texto supera el espacio asignado. Por defecto el valor es `TextOverflow.Clip`, que corta el texto sin ninguna indicación.
 
 ```kotlin
 @Composable
@@ -115,7 +125,8 @@ fun OverflowedText() {
 ```
 
 ### 7. Texto seleccionable
-Por defecto, los composables de tipo `Text` no admiten selección por parte del usuario, lo que impide copiar el texto en la aplicación. Para habilitar la interactividad de copiado, se deben envolver los elementos correspondientes con el contenedor `SelectionContainer`.
+
+Por defecto, el composable `Text` no permite que el usuario seleccione ni copie el texto. Para habilitar la selección, se envuelve el contenido con `SelectionContainer`.
 
 ```kotlin
 @Composable
@@ -128,10 +139,13 @@ fun SelectableText() {
 
 ---
 
-## Posicionamiento y Estilos Avanzados
+## Posicionamiento y estilos avanzados
 
 ### 8. Alineación del texto
-Para alinear el texto de forma horizontal dentro de los límites asignados a su contenedor (izquierda, centro, derecha o justificado), se utiliza el parámetro `textAlign`.
+
+Para alinear el texto horizontalmente dentro de los límites de su contenedor se usa el parámetro `textAlign`. Valores habituales: `TextAlign.Start`, `Center`, `End` y `Justify`. Se recomienda `Start`/`End` frente a `Left`/`Right`, porque respetan los idiomas que se escriben de derecha a izquierda.
+
+Para que la alineación sea visible, el `Text` debe ocupar todo el ancho disponible (por ejemplo, con `Modifier.fillMaxWidth()`).
 
 ```kotlin
 @Composable
@@ -144,8 +158,9 @@ fun AlignedText() {
 }
 ```
 
-### 9. Familias de fuentes (Tipografía)
-El parámetro `fontFamily` permite alternar entre las diferentes fuentes del sistema o bien estructurar fuentes personalizadas cargadas desde los recursos de la aplicación (archivos `.ttf` o `.otf` almacenados en el directorio `res/font`).
+### 9. Familias de fuentes (tipografía)
+
+El parámetro `fontFamily` permite elegir entre las fuentes del sistema (`FontFamily.Monospace`, `SansSerif`, `Serif`, `Cursive`) o usar fuentes personalizadas cargadas desde los recursos de la aplicación (archivos `.ttf` u `.otf` en el directorio `res/font`).
 
 ```kotlin
 @Composable
@@ -158,19 +173,20 @@ fun CustomFontText() {
 ```
 
 ### 10. Estilos y Material Design
-En lugar de definir de manera individual el tamaño, el color y las propiedades tipográficas en cada elemento independiente, se recomienda utilizar el parámetro `style`. Este parámetro permite aplicar configuraciones estandarizadas del tema global del sistema o implementar estructuras reutilizables mediante `TextStyle`.
+
+En lugar de definir por separado tamaño, color y demás propiedades tipográficas en cada elemento, se recomienda usar el parámetro `style`. Permite aplicar los estilos estandarizados del tema global (Material Theme) o crear estilos reutilizables mediante `TextStyle`.
 
 ```kotlin
 @Composable
 fun StyledText() {
     Column {
-        // Implementación del sistema de tipografía global de Material Theme
+        // Estilo tipográfico del tema global de Material Design 3
         Text(
             text = "Título Principal",
             style = MaterialTheme.typography.titleLarge
         )
-        
-        // Configuración de un TextStyle personalizado con interlineado estructurado
+
+        // TextStyle personalizado con interlineado y espaciado de letras específicos
         Text(
             text = "Párrafo con interlineado y espaciado de letras específicos.",
             style = TextStyle(
@@ -184,14 +200,10 @@ fun StyledText() {
 
 ---
 
-### Resultado General
+### Resultado general
 
 ![Resultado de los ejemplos de Text](images/0d004d_5ef7b46357394dcbb02d4111ad1782fb_mv2.jpg)
 
-**Consulta la documentación oficial para más detalles**
+**Documentación oficial**
 
-<https://android.com>
-
-**Código fuente**
-
-<https://github.com>
+<https://developer.android.com/develop/ui/compose/text>
