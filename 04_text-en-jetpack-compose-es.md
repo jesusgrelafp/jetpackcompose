@@ -2,7 +2,7 @@
 
 > Aprende a usar y personalizar el composable Text en Jetpack Compose: tamaño, color, negrita, cursiva, número máximo de líneas y más.
 
-*Básicos · 28 de enero de 2024 · 10 min de lectura*  
+*Básicos · Actualizado · 10 min de lectura*  
 *Fuente base (en inglés): <https://jetpackcompose.net>*
 
 ---
@@ -14,25 +14,25 @@ Si eres desarrollador de Android clásico, equivale al componente ***TextView***
 Si eres nuevo en la programación Android, representa simplemente una ***etiqueta*** (*label*) o un ***párrafo*** de texto dentro de la interfaz.
 
 ### Parámetros oficiales de la función Text
-A continuación se muestran los parámetros más comunes incluidos en la firma del constructor de `Text`:
+A continuación se muestran los parámetros más comunes incluidos en la firma del constructor de `Text`, detallando la función de cada propiedad:
 
 ```kotlin
 Text(
-    text = "Texto a mostrar",
-    modifier = Modifier,
-    color = Color.Unspecified,
-    fontSize = TextUnit.Unspecified,
-    fontStyle = null,
-    fontWeight = null,
-    fontFamily = null,
-    letterSpacing = TextUnit.Unspecified,
-    textDecoration = null,
-    textAlign = null,
-    lineHeight = TextUnit.Unspecified,
-    overflow = TextOverflow.Clip,
-    softWrap = true,
-    maxLines = Int.MAX_VALUE,
-    style = LocalTextStyle.current
+    text = "Texto a mostrar",                   // El contenido de texto que se va a renderizar en pantalla.
+    modifier = Modifier,                        // Modificador para aplicar tamaño, márgenes, fondos o comportamientos.
+    color = Color.Unspecified,                  // El color que se aplicará al texto (si no se especifica, usa el del estilo).
+    fontSize = TextUnit.Unspecified,            // El tamaño de la fuente tipográfica utilizando unidades .sp.
+    fontStyle = null,                           // Define si el texto se muestra normal o inclinado (cursiva/itálica).
+    fontWeight = null,                          // Configura el grosor del trazo de la tipografía (como la negrita).
+    fontFamily = null,                          // La familia tipográfica que se va a usar (Monospace, SansSerif, etc.).
+    letterSpacing = TextUnit.Unspecified,       // El espacio horizontal adicional que se añade entre cada carácter.
+    textDecoration = null,                      // Aplica decoraciones visuales como el subrayado o el tachado.
+    textAlign = null,                           // La alineación horizontal del texto dentro de los límites de su contenedor.
+    lineHeight = TextUnit.Unspecified,          // El interlineado o la altura que tendrá cada línea de texto verticalmente.
+    overflow = TextOverflow.Clip,               // El comportamiento visual cuando el texto excede los límites disponibles.
+    softWrap = true,                            // Determina si el texto debe saltar automáticamente de línea al llegar al borde.
+    maxLines = Int.MAX_VALUE,                   // El límite máximo de líneas que se permite dibujar antes de truncar el texto.
+    style = LocalTextStyle.current              // Estilo de tipografía global predefinido de Material Design o TextStyle base.
 )
 ```
 
