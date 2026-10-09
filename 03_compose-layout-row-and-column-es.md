@@ -19,11 +19,30 @@ Un layout proporciona un contenedor invisible que alberga componentes visuales (
 
 ---
 
-## Contenedores Básicos y Lineales
+## Alineación (Alignment) vs Disposición (Arrangement)
 
-### 1. Row (Fila)
+Para comprender el posicionamiento en los contenedores lineales, es fundamental dominar estos dos conceptos esenciales:
+*   **Eje Principal (Main Axis):** El eje en el que el contenedor añade sus elementos (Horizontal en `Row`, Vertical en `Column`). Se controla mediante el parámetro **Arrangement**.
+*   **Eje Cruzado (Cross Axis):** El eje perpendicular al principal (Vertical en `Row`, Horizontal en `Column`). Se controla mediante el parámetro **Alignment**.
+*   **En Box (Sin ejes lineales):** No existe un eje de propagación lineal. Todo el posicionamiento se maneja directamente combinando ambas dimensiones.
+
+---
+
+## 1. El Composable Row (Fila)
+
 Un `Row` muestra cada hijo a continuación del anterior en el eje horizontal. Funciona de forma equivalente a un `LinearLayout` con orientación horizontal del sistema de vistas clásico.
 
+### Parámetros oficiales de Row
+```kotlin
+Row(
+    modifier = Modifier,
+    horizontalArrangement = Arrangement.Start, // Distribución horizontal (Eje principal)
+    verticalAlignment = Alignment.Top,          // Alineación vertical (Eje cruzado)
+    content = { /* Componentes hijos dentro de RowScope */ }
+)
+```
+
+### Ejemplo de uso básico
 ```kotlin
 @Composable
 fun SimpleRow(){
@@ -35,9 +54,23 @@ fun SimpleRow(){
 }
 ```
 
-### 2. Column (Columna)
+---
+
+## 2. El Composable Column (Columna)
+
 Un `Column` muestra cada hijo debajo de los anteriores en el eje vertical. Funciona de forma equivalente a un `LinearLayout` con orientación vertical.
 
+### Parámetros oficiales de Column
+```kotlin
+Column(
+    modifier = Modifier,
+    verticalArrangement = Arrangement.Top,       // Distribución vertical (Eje principal)
+    horizontalAlignment = Alignment.Start,        // Alineación horizontal (Eje cruzado)
+    content = { /* Componentes hijos dentro de ColumnScope */ }
+)
+```
+
+### Ejemplo de uso básico
 ```kotlin
 @Composable
 fun SimpleColumn(){
@@ -53,15 +86,23 @@ fun SimpleColumn(){
 
 ---
 
-## El Contenedor Box (Capas y Superposición)
+## 3. El Contenedor Box (Capas y Superposición)
 
-A diferencia de `Row` y `Column`, el contenedor `Box` no ordena los elementos de forma secuencial. Si se colocan tres elementos dentro de un `Box` sin modificar sus parámetros, se dibujarán uno encima del otro en la esquina superior izquierda.
+A diferencia de `Row` y `Column`, el contenedor `Box` no ordena los elementos de forma secuencial. Si se colocan elementos dentro de un `Box` sin modificar sus parámetros, se dibujarán uno encima del otro en la esquina superior izquierda. 
 
-Es el contenedor ideal para:
-*   Colocar texto o iconos sobre una imagen de fondo.
-*   Crear indicadores de notificación (un círculo de color sobre el icono de una campana).
-*   Dibujar elementos flotantes o barras de progreso superpuestas.
+Es el contenedor utilizado para colocar texto o iconos sobre una imagen de fondo, crear indicadores de notificación o dibujar barras de progreso superpuestas.
 
+### Parámetros oficiales de Box
+```kotlin
+Box(
+    modifier = Modifier,
+    contentAlignment = Alignment.TopStart, // Alineación por defecto para todos los hijos
+    propagateMinConstraints = false,       // Define si las restricciones mínimas se pasan a los hijos
+    content = { /* Componentes hijos dentro de BoxScope */ }
+)
+```
+
+### Ejemplo de uso básico
 ```kotlin
 @Composable
 fun SimpleBox() {
@@ -76,30 +117,32 @@ fun SimpleBox() {
 
 ---
 
-## Alineación (Alignment) vs Disposición (Arrangement)
+## Opciones de Posicionamiento Detalladas
 
-Para comprender el posicionamiento, es fundamental dominar estos dos conceptos esenciales:
-*   **Eje Principal (Main Axis):** El eje en el que el contenedor añade sus elementos (Horizontal en `Row`, Vertical en `Column`). Se controla con **Arrangement**.
-*   **Eje Cruzado (Cross Axis):** El eje perpendicular al principal (Vertical en `Row`, Horizontal en `Column`). Se controla con **Alignment**.
-*   **En Box (Sin ejes lineales):** No existe un eje de propagación lineal. Todo el posicionamiento se maneja directamente con **Alignment** combinando sus dos dimensiones.
+### Opciones de Disposición (Arrangement)
+El `Arrangement` define cómo se distribuye el espacio sobrante a lo largo del eje principal en filas y columnas:
 
----
+*   **SpaceEvenly:** Reparte los elementos uniformemente, dejando el mismo espacio entre ellos y en los extremos exteriores.
+    ![Disposición SpaceEvenly](images/0d004d_0425e528f4f24ed3a7a05c9fee7139d0_mv2.jpg)
+*   **SpaceBetween:** Empuja el primer elemento al inicio absoluto y el último al final absoluto, repartiendo el espacio restante únicamente en las separaciones intermedias.
+    ![Disposición SpaceBetween](images/0d004d_97d662b107bc4db78aa275cae59d1977_mv2.jpg)
+*   **SpaceAround:** Cada elemento tiene el mismo espacio a sus lados, lo que provoca que el espacio en los extremos exteriores sea la mitad de ancho que el espacio intermedio.
+    ![Disposición SpaceAround](images/0d004d_0300ba2e8c304e0698fd6104cf65fc00_mv2.jpg)
 
-## Las 9 Opciones de Alineación (Alignment)
-
+### Las 9 Opciones de Alineación (Alignment)
 La alineación define cómo se posicionan los elementos respecto al eje cruzado o dentro de un espacio bidimensional:
 
-### A. Alineación Vertical (Exclusiva para usar dentro de un `Row`)
+#### A. Alineación Vertical (Exclusiva para usar dentro de un `Row`)
 *   `Alignment.Top`: Eleva los elementos al borde superior.
 *   `Alignment.CenterVertically`: Centra los elementos verticalmente.
 *   `Alignment.Bottom`: Baja los elementos al borde inferior.
 
-### B. Alineación Horizontal (Exclusiva para usar dentro de un `Column`)
+#### B. Alineación Horizontal (Exclusiva para usar dentro de un `Column`)
 *   `Alignment.Start`: Empuja los elementos al inicio (izquierda).
 *   `Alignment.CenterHorizontally`: Centra los elementos horizontalmente.
 *   `Alignment.End`: Empuja los elementos al final (derecha).
 
-### C. Alineación Bidimensional (Para usar en `Box` o de forma individual)
+#### C. Alineación Bidimensional (Para usar en `Box` o de forma individual)
 Al combinar coordenadas horizontales y verticales, se obtienen 9 puntos exactos para posicionar elementos en un plano:
 *   `Alignment.TopStart` (Superior Izquierda)
 *   `Alignment.TopCenter` (Superior Centro)
@@ -111,20 +154,7 @@ Al combinar coordenadas horizontales y verticales, se obtienen 9 puntos exactos 
 *   `Alignment.BottomCenter` (Inferior Centro)
 *   `Alignment.BottomEnd` (Inferior Derecha)
 
-> **Nota técnica:** También es posible aplicar estas alineaciones de forma individual en un único hijo utilizando el modificador `Modifier.align()`.
-
----
-
-## Disposición (Arrangement)
-
-El `Arrangement` define cómo se distribuye el espacio sobrante a lo largo del eje principal en filas y columnas:
-
-*   **SpaceEvenly:** Reparte los elementos uniformemente, dejando el mismo espacio entre ellos y en los extremos exteriores.
-    ![Disposición SpaceEvenly](images/0d004d_0425e528f4f24ed3a7a05c9fee7139d0_mv2.jpg)
-*   **SpaceBetween:** Empuja el primer elemento al inicio absoluto y el último al final absoluto, repartiendo el espacio restante únicamente en las separaciones intermedias.
-    ![Disposición SpaceBetween](images/0d004d_97d662b107bc4db78aa275cae59d1977_mv2.jpg)
-*   **SpaceAround:** Cada elemento tiene el mismo espacio a sus lados, lo que provoca que el espacio en los extremos exteriores sea la mitad de ancho que el espacio intermedio.
-    ![Disposición SpaceAround](images/0d004d_0300ba2e8c304e0698fd6104cf65fc00_mv2.jpg)
+> **Nota técnica:** También es posible aplicar estas alineaciones de forma individual en un único hijo utilizando el modificador `Modifier.align()` disponible gracias a los ámbitos (*scopes*) de cada contenedor.
 
 ---
 
@@ -186,4 +216,3 @@ Para consolidar el uso combinado de `Row`, `Column` y `Box`, el siguiente ejerci
 
 ### Pistas para la resolución:
 * El modificador `Modifier.clip(CircleShape)` permite recortar formas circulares para la foto o el indicador de estado.
-* Los modificadores `.align()` individuales permiten omitir las reglas generales del contenedor padre cuando se requiere un posicionamiento específico.
