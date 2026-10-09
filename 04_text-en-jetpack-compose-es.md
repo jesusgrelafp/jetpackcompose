@@ -53,12 +53,12 @@ fun TextWithSize(label : String, size : TextUnit) {
 ```
 
 ### Unidades de medida: .dp vs .sp
-Para diseñar interfaces accesibles y consistentes en Android, es fundamental que el alumno distinga cuándo utilizar cada unidad de medida:
+Para diseñar interfaces accesibles y consistentes en Android, es necesario diferenciar con precisión cuándo utilizar cada unidad de medida:
 
-*   **`.dp` (Density-independent Pixels):** Es una unidad física abstracta que se adapta a la densidad de píxeles de cada pantalla para asegurar que un elemento mida lo mismo visualmente en cualquier dispositivo. Se debe utilizar exclusivamente para definir dimensiones estructurales, tales como el tamaño de los contenedores (`Modifier.size()`), márgenes internos o externos (`Modifier.padding()`), anchos (`width`) y altos (`height`).
-*   **`.sp` (Scale-independent Pixels):** Es una unidad de medida idéntica al `.dp`, pero que incluye un factor de escala adicional determinado por las preferencias del sistema operativo. Se debe utilizar obligatoriamente para definir el tamaño de las fuentes tipográficas (`fontSize`) y el interlineado (`lineHeight`).
+*   **`.dp` (Density-independent Pixels):** Es una unidad física abstracta que se adapta a la densidad de píxeles de cada pantalla para asegurar que un elemento mida lo mismo visualmente en cualquier dispositivo. Se utiliza exclusivamente para definir dimensiones estructurales, tales como el tamaño de los contenedores (`Modifier.size()`), márgenes internos o externos (`Modifier.padding()`), anchos (`width`) y altos (`height`).
+*   **`.sp` (Scale-independent Pixels):** Es una unidad de medida idéntica al `.dp`, pero que incluye un factor de escala adicional determinado por las preferencias del sistema operativo. Se utiliza de forma obligatoria para definir el tamaño de las fuentes tipográficas (`fontSize`) y el interlineado (`lineHeight`).
 
-**Regla académica fundamental:** Si el usuario aumenta el tamaño del texto en los ajustes de accesibilidad de su teléfono para leer mejor, las fuentes configuradas en `.sp` aumentarán su tamaño de forma dinámica. Si se configuran erróneamente en `.dp`, el tamaño del texto permanecerá fijo y bloqueado, lo que perjudica la accesibilidad de la aplicación.
+**Regla de diseño:** Si un usuario aumenta el tamaño del texto en los ajustes de accesibilidad del sistema operativo para facilitar la lectura, las fuentes configuradas en `.sp` incrementarán su tamaño de forma dinámica. Si se configuran erróneamente en `.dp`, el tamaño del texto permanecerá fijo y bloqueado, lo que afecta negrita y directamente la accesibilidad de la aplicación.
 
 ### 2. Color del texto
 Modifica el color del texto mediante el parámetro `color`.
