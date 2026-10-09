@@ -9,27 +9,40 @@
 
 ## Parámetros oficiales de la función Image
 
-A continuación se muestran los parámetros incluidos en la firma del constructor de `Image`, detallando la función de cada propiedad:
+Antes de empezar a aprender, conviene conocer las opciones disponibles en la función `Image`. A continuación se detallan los parámetros incluidos en su firma, indicando la función exacta de cada uno mediante comentarios:
 
 ```kotlin
 @Composable
 fun Image(
-    painter: Painter,                           // El objeto gráfico que se va a dibujar (obtenido mediante painterResource).
+    painter: Painter,                           // El objeto gráfico que se va a renderizar (obtenido comúnmente con painterResource).
     contentDescription: String?,                // Texto de accesibilidad para lectores de pantalla (puede establecerse como null).
-    modifier: Modifier = Modifier,              // Modificador para aplicar tamaño, márgenes, formas, bordes o clics.
-    alignment: Alignment = Alignment.Center,    // La alineación de la imagen dentro de los límites asignados si el contenedor es mayor.
-    contentScale: ContentScale = ContentScale.Fit, // La regla de escala para adaptar el contenido de la imagen al tamaño del contenedor.
+    modifier: Modifier = Modifier,              // Modificador para aplicar tamaño, márgenes, formas, bordes o acciones de clic.
+    alignment: Alignment = Alignment.Center,    // La alineación del gráfico dentro de los límites del contenedor si este es mayor.
+    contentScale: ContentScale = ContentScale.Fit, // La regla de escala aplicada para adaptar la imagen a las dimensiones asignadas.
     alpha: Float = DefaultAlpha,                // Controla la opacidad visual del elemento (desde 0.0 transparente a 1.0 opaco).
-    colorFilter: ColorFilter? = null            // Aplica efectos o tintes cromáticos directamente sobre los píxeles de la imagen.
+    colorFilter: ColorFilter? = null            // Aplica filtros cromáticos, efectos o tintes directamente sobre los píxeles.
 )
 ```
+
+**Para crear una imagen necesitas los siguientes parámetros:**
+
+**a) Painter**: para cargar un drawable desde los recursos necesitas usar `painterResource`. Debes pasar el id del recurso drawable como parámetro de `painterResource`, y te devolverá el painter.
+
+```kotlin
+fun painterResource(@DrawableRes id: Int): Painter
+```
+
+**b) ContentDescription**: debes dar una descripción de la imagen. Puedes establecerla como `null`.
+
+**c) Modifier (opcional)**: si no usas el modifier, `Image` tomará como tamaño el tamaño original del recurso. Por eso conviene usar el modifier para fijar un tamaño y evitar problemas de diseño.
 
 ---
 
 ## Opciones de Personalización y Diseño Básicos
 
 ### 1. Imagen simple
-Para cargar una imagen básica se utiliza `painterResource`, el cual requiere el identificador numérico del recurso gráfico almacenado en el proyecto.
+
+**Código de ejemplo:**
 
 ```kotlin
 @Composable
@@ -37,15 +50,20 @@ fun SimpleImage() {
     Image(
         painter = painterResource(id = R.drawable.andy_rubin),
         contentDescription = "Andy Rubin",
-        modifier = Modifier.fillMaxWidth() // Expande el componente al ancho máximo disponible
+        modifier = Modifier.fillMaxWidth()
     )
 }
 ```
 
+Aquí se establece el drawable con `painterResource` y se aplica el modificador ***fillMaxWidth()***, que hace que la imagen ocupe todo el ancho de la pantalla.
+
+**Resultado:**
+
 ![Imagen simple](images/0d004d_47c6d0713da34afa841b84efa7a2b6e5_mv2.png)
 
 ### 2. Imagen circular
-Para generar una interfaz geométrica circular, se combina un tamaño fijo con el modificador `.clip(CircleShape)`. Se recomienda usar `ContentScale.Crop` para que la imagen rellene todo el espacio sin deformarse.
+
+**Código de ejemplo:**
 
 ```kotlin
 @Composable
@@ -56,16 +74,21 @@ fun CircleImageView() {
         contentScale = ContentScale.Crop,
         modifier = Modifier
             .size(128.dp)
-            .clip(CircleShape)                 // Recorta el componente en forma de círculo perfecto
+            .clip(CircleShape) // Recorta el componente en forma de círculo perfecto
             .border(5.dp, Color.Gray, CircleShape) // Añade un contorno periférico opcional
     )
 }
 ```
 
+Se recorta la forma a **CircleShape**, de modo que toda la imagen se convierte en un círculo. Además se añade un borde gris alrededor de la imagen. El borde es opcional: si no se requiere, puede omitirse.
+
+**Resultado:**
+
 ![Imagen circular](images/0d004d_f052882da9e44ad5a62836fc6b94e00e_mv2.png)
 
 ### 3. Imagen con esquinas redondeadas
-Sigue el mismo principio de recorte de la imagen circular, sustituyendo la geometría por `RoundedCornerShape`. Este método acepta valores en porcentaje o unidades fijas de densidad.
+
+**Código de ejemplo:**
 
 ```kotlin
 @Composable
@@ -76,15 +99,20 @@ fun RoundCornerImageView() {
         contentScale = ContentScale.Crop,
         modifier = Modifier
             .size(128.dp)
-            .clip(RoundedCornerShape(10)) // Recorte basado en porcentaje (10%)
-            // Para unidades fijas se utilizaría: RoundedCornerShape(16.dp)
+            .clip(RoundedCornerShape(10))
             .border(5.dp, Color.Gray, RoundedCornerShape(10))
     )
 }
 ```
 
+Es igual que el ejemplo anterior de la imagen circular. La única diferencia es que se cambia la forma de recorte a *RoundedCornerShape()*.
+
+*   Si se requiere indicar un porcentaje, se debe pasar un valor entero: ***RoundedCornerShape(20)***
+*   Si se requiere indicar un valor en Dp, se pasa el valor en Dp: ***RoundedCornerShape(50.dp)***
+
 ### 4. Color de fondo de la imagen
-Se puede aplicar un color plano al fondo del contenedor mediante el modificador `.background()`. Esta propiedad es perceptible únicamente en recursos con transparencia, como formatos PNG o archivos vectoriales.
+
+**Código de ejemplo:**
 
 ```kotlin
 @Composable
@@ -100,8 +128,11 @@ fun ImageWithBackgroundColor() {
 }
 ```
 
-### 5. ColorFilter de la imagen (tintado)
-El método `ColorFilter.tint()` modifica la coloración de los píxeles opacos de un recurso gráfico. Es de gran utilidad para modificar dinámicamente el color de iconos monocromáticos (`VectorDrawables`) sin duplicar archivos.
+En este ejemplo se usa un icono PNG como recurso. Si se utiliza un JPEG/JPG no se percibirá el color de fondo, porque ese formato no admite canales de transparencia. Se usa el modificador **background()** para establecer el color de fondo de esta imagen.
+
+### 5. ColorFilter de la imagen (tint)
+
+**Código de ejemplo:**
 
 ```kotlin
 @Composable
@@ -109,10 +140,17 @@ fun ImageWithTint() {
     Image(
         painter = painterResource(id = R.drawable.ic_cart),
         contentDescription = "",
-        colorFilter = ColorFilter.tint(Color.Red), // Tiñe los trazos de la imagen de color rojo
-        modifier = Modifier.size(200.dp)
+        colorFilter = ColorFilter.tint(Color.Red),
+        modifier = Modifier
+            .size(200.dp)
     )
 }
+```
+
+Con ayuda de `tint()` se puede cambiar el color del recurso de la imagen de manera dinámica. Es posible establecer cualquier color mediante el filtro de color.
+
+```kotlin
+colorFilter = ColorFilter.tint(Color.Red)
 ```
 
 ---
@@ -128,7 +166,8 @@ El parámetro `contentScale` determina cómo se estira, recorta o adapta la imag
 *   **`ContentScale.FillHeight`:** Escala la imagen manteniendo su relación de aspecto original de modo que la altura del gráfico coincida exactamente con la altura asignada al contenedor, lo que puede provocar recortes horizontales si el contenedor es más estrecho.
 *   **`ContentScale.Inside`:** Mantiene la imagen centrada con su relación de aspecto original. Si la imagen es más grande que el contenedor, funciona exactamente como `Fit` reduciendo su tamaño. Si la imagen es más pequeña que el contenedor, conserva sus dimensiones originales sin expandirse ni pixelarse.
 
-### Ejemplo de uso de escala
+**Código de ejemplo:**
+
 ```kotlin
 @Composable
 fun InsideFit() {
@@ -138,7 +177,7 @@ fun InsideFit() {
         modifier = Modifier
             .size(150.dp)
             .background(Color.LightGray),
-        contentScale = ContentScale.Inside // Aplica la regla de escala Inside
+        contentScale = ContentScale.Inside
     )
 }
 ```
