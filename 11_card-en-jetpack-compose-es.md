@@ -7,7 +7,7 @@
 
 ## ¿Qué es Card?
 
-Card es un contenedor que agrupa contenido relacionado sobre un mismo tema. Tiene un contenedor con forma y color propios, puede mostrar elevación (un efecto de sombra) y puede tener un borde con las esquinas redondeadas.
+Card es un contenedor que agrupa contenido relacionado sobre un mismo tema. Tiene un contenedor con forma y color propios, puede mostrar elevación (un efecto de sombra) y puede tener un borde con las esquinas redondeadas. 
 
 En Material 3 el contenido de un Card se declara dentro de un `ColumnScope`: los composables que pongas dentro se apilan en vertical, como en una `Column`.
 
